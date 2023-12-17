@@ -19,8 +19,6 @@ import java.util.List;
 @CrossOrigin("*")
 public class CustomerRestController {
     private BankAccountService bankAccountService;
-
-
     @PreAuthorize("hasAuthority('SCOPE_USER')")
     @GetMapping("/customers")
     public List<CustomerDTO> customers(){

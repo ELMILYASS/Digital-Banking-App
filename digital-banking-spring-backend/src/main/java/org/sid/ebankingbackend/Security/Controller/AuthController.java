@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -94,12 +95,14 @@ public class AuthController {
     }
 
     //Without refresh token
+    //@PostMapping("/login")
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> jwtToken(
-            String username,
-            String password
+            @RequestParam String username,
+            @RequestParam String password
     ) {
-
+        System.out.println(username);
+        System.out.println(password);
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(username, password)
         );
@@ -108,13 +111,13 @@ public class AuthController {
                 .stream().map(aut -> aut.getAuthority())
                 .collect(Collectors.joining(" "));
 
-
+        System.out.println(authentication);
         Map<String, String> idToken = new HashMap<>();
         Instant instant = Instant.now();
         JwtClaimsSet jwtClaimsSet = JwtClaimsSet.builder()
                 .subject(subject)
                 .issuedAt(instant)
-                .expiresAt(instant.plus(5, ChronoUnit.MINUTES))
+                .expiresAt(instant.plus(1, ChronoUnit.MINUTES))
                 .issuer("security-service")
                 .claim("scope", scope)
                 .build();
